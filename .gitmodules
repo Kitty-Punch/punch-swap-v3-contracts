@@ -1,0 +1,21 @@
+[submodule "lib/forge-std"]
+	branch = "v1.9.6"
+	path = lib/forge-std
+	url = https://github.com/foundry-rs/forge-std
+[submodule "lib/openzeppelin-contracts"]
+	branch = release-v3.4
+	path = lib/openzeppelin-contracts
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+[submodule "lib/base64"]
+	path = lib/base64
+	url = https://github.com/brechtpd/base64
+[submodule "lib/uniswap-lib"]
+	path = lib/uniswap-lib
+	url = https://github.com/Uniswap/uniswap-lib
+[submodule "lib/openzeppelin-contracts-53"]
+	path = lib/openzeppelin-contracts-53
+	url = https://github.com/openzeppelin/openzeppelin-contracts
+	branch = release-v5.3
+[submodule "lib/solmate"]
+	path = lib/solmate
+	url = https://github.com/rari-capital/solmate
