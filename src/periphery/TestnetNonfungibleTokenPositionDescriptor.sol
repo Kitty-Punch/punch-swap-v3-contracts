@@ -16,22 +16,18 @@ import './NonfungibleTokenPositionDescriptorBase.sol';
 
 /// @title Describes NFT token positions
 /// @notice Produces a string containing the data URI for a JSON metadata string
-contract NonfungibleTokenPositionDescriptor is NonfungibleTokenPositionDescriptorBase {
+contract TestnetNonfungibleTokenPositionDescriptor is NonfungibleTokenPositionDescriptorBase {
 
-    uint256 private constant CHAIN_ID = 747;
-
+    uint256 private constant CHAIN_ID = 545;
     address private constant WFLOW_ADDRESS = address(0xd3bF53DAC106A0290B0483EcBC89d40FcC961f3e);
-
-    address private constant USDF = address(0x2aaBea2058b5aC2D339b163C6Ab6f2b6d53aabED);
-    address private constant STG_USDC = address(0xF1815bd50389c46847f0Bda824eC8da914045D14);
-    address private constant USDC_E = address(0x7f27352D5F83Db87a5A3E00f4B07Cc2138D8ee52);
-    address private constant CBTC = address(0xA0197b2044D28b08Be34d98b23c9312158Ea9A18);
+    address private constant USDF = address(0xd7d43ab7b365f0d0789aE83F4385fA710FfdC98F);
+    address private constant USDC_E = address(0x309222b7833D3D0A59A8eBf9C64A5790bf43E2aA);
+    address private constant CBTC = address(0x208d09d2a6Dd176e3e95b3F0DE172A7471C5B2d6);
 
     constructor(bytes32 _nativeCurrencyLabelBytes) NonfungibleTokenPositionDescriptorBase(WFLOW_ADDRESS, _nativeCurrencyLabelBytes) {}
 
     function _initializePriorities() override internal {
         priorities[CHAIN_ID][USDF] = TokenRatioSortOrder.NUMERATOR_MOST;
-        priorities[CHAIN_ID][STG_USDC] = TokenRatioSortOrder.NUMERATOR_MORE;
         priorities[CHAIN_ID][USDC_E] = TokenRatioSortOrder.NUMERATOR;
         priorities[CHAIN_ID][CBTC] = TokenRatioSortOrder.DENOMINATOR_MORE;
     }

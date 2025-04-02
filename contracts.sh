@@ -99,6 +99,7 @@ if [ "$DEPLOY_PERIPHERY_1" = true ]; then
         # V3 Factory
         # WETH9
     forge script script/05a_UniswapV3StaticQuoter.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
+        # V3 Factory
     forge script script/06_SwapRouter.s.sol  --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
         # V3 Factory
         # WETH9
@@ -106,7 +107,8 @@ if [ "$DEPLOY_PERIPHERY_1" = true ]; then
         # V3 Factory
         # WETH9
     forge script script/08_NonfungibleTokenPositionDescriptor.s.sol  --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
-        # WETH9
+        # ETH_NATIVE_CURRENCY_LABEL_BYTES
+    forge script script/08a_TestnetNonfungibleTokenPositionDescriptor.s.sol  --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
         # ETH_NATIVE_CURRENCY_LABEL_BYTES
 else
     echo 'SKIPPING PERIPHERY 1 MODULE DEPLOYMENT'

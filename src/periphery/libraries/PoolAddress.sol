@@ -3,6 +3,7 @@ pragma solidity ^0.7.6;
 
 /// @title Provides functions for deriving a pool address from the factory, tokens, and the fee
 library PoolAddress {
+    // Punch Swap v3 init code hash
     bytes32 internal constant POOL_INIT_CODE_HASH = 0x36d34ba6c7e3ffdaa02f051b818a8426bd04605b16585fd601fa26477955d33f;
 
     /// @notice The identifying key of the pool

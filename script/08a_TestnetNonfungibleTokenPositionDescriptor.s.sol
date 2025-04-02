@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.7.6;
 
-import { NonfungibleTokenPositionDescriptor } from "../src/periphery/NonfungibleTokenPositionDescriptor.sol";
+import { TestnetNonfungibleTokenPositionDescriptor } from "../src/periphery/TestnetNonfungibleTokenPositionDescriptor.sol";
 import { Constants } from "./Constants.sol";
 import "forge-std/console.sol";
 
-contract NonfungibleTokenPositionDescriptorScript is Constants   {
+contract TestnetNonfungibleTokenPositionDescriptorScript is Constants   {
 
-    function run() external returns (NonfungibleTokenPositionDescriptor descriptor) {
+    function run() external returns (TestnetNonfungibleTokenPositionDescriptor descriptor) {
         uint256 deployerPrivateKey = vm.envUint(PARAM_PK_ACCOUNT);
         bytes32 salt = vm.envBytes32(PARAM_SALT);
         address ownerAddress = vm.envAddress(PARAM_OWNER);
@@ -22,11 +22,11 @@ contract NonfungibleTokenPositionDescriptorScript is Constants   {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        // constructor(address _WETH9, bytes32 _nativeCurrencyLabelBytes) 
-        descriptor = new NonfungibleTokenPositionDescriptor{salt: salt}(ETH_NATIVE_CURRENCY_LABEL_BYTES);
+        // constructor(bytes32 _nativeCurrencyLabelBytes) 
+        descriptor = new TestnetNonfungibleTokenPositionDescriptor{salt: salt}(ETH_NATIVE_CURRENCY_LABEL_BYTES);
 
         vm.stopBroadcast();
-        console.log("NonfungibleTokenPositionDescriptor:     ", address(descriptor));
+        console.log("TestnetNonfungibleTokenPositionDescriptor:     ", address(descriptor));
         return descriptor;
     }
 }
