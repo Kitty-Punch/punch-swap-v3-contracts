@@ -38,6 +38,7 @@ abstract contract V2SwapRouter is RouterImmutables, Permit2Payments {
                 //
                 (uint256 amount0Out, uint256 amount1Out) = _calculateAmount0OutAndAmount1Out(input, pair, token0);
                 address nextPair;
+                // The Uniswap v2 factory and init code hash are injected by constructor.
                 (nextPair, token0) = i < penultimatePairIndex
                     ? UniswapV2Library.pairAndToken0For(
                         UNISWAP_V2_FACTORY, UNISWAP_V2_PAIR_INIT_CODE_HASH, output, path[i + 2]

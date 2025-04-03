@@ -8,7 +8,7 @@ import { Constants } from "./Constants.sol";
 
 contract UniswapV3PoolInitBytecodeHashScript is Constants {
 
-    function run() external returns (bytes32 initCodeHash) {
+    function run() external pure returns (bytes32 initCodeHash) {
         // Get the init bytecode hash
         bytes memory initCode = type(UniswapV3Pool).creationCode;
         initCodeHash = keccak256(initCode);
