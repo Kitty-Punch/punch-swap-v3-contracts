@@ -3,25 +3,25 @@ pragma solidity =0.7.6;
 
 import './UniV3likeQuoterCore.sol';
 import '../libraries/TickBitmap.sol';
-import '../../core/interfaces/IUniswapV3Pool.sol';
+import '../../core/interfaces/IPunchSwapV3Pool.sol';
 
 contract UniV3QuoterCore is UniV3likeQuoterCore {
 
     function getPoolGlobalState(
         address pool
     ) internal override view returns (GlobalState memory gs) {
-        gs.fee = uint16(IUniswapV3Pool(pool).fee());
-        (gs.startPrice, gs.startTick,,,,,) = IUniswapV3Pool(pool).slot0();
+        gs.fee = uint16(IPunchSwapV3Pool(pool).fee());
+        (gs.startPrice, gs.startTick,,,,,) = IPunchSwapV3Pool(pool).slot0();
     }
     
     function getTickSpacing(
         address pool
     ) internal override view returns (int24) {
-        return IUniswapV3Pool(pool).tickSpacing();
+        return IPunchSwapV3Pool(pool).tickSpacing();
     }
     
     function getLiquidity(address pool) internal override view returns (uint128) {
-        return IUniswapV3Pool(pool).liquidity();
+        return IPunchSwapV3Pool(pool).liquidity();
     }
     
     function nextInitializedTickWithinOneWord(
@@ -48,7 +48,7 @@ contract UniV3QuoterCore is UniV3likeQuoterCore {
         uint32 outerSecondsSpent,
         bool initialized
     ) {
-        return IUniswapV3Pool(pool).ticks(tick);
+        return IPunchSwapV3Pool(pool).ticks(tick);
     }
 
 }

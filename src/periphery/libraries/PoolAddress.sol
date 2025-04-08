@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
-pragma solidity ^0.7.6;
+pragma solidity =0.7.6;
 
 /// @title Provides functions for deriving a pool address from the factory, tokens, and the fee
 library PoolAddress {
     // Punch Swap v3 init code hash
-    bytes32 internal constant POOL_INIT_CODE_HASH = 0x36d34ba6c7e3ffdaa02f051b818a8426bd04605b16585fd601fa26477955d33f;
+    bytes32 internal constant POOL_INIT_CODE_HASH = 0x26660e3e1d4c57d4b15194ab223b67c9fdb3c3d98d4b50513ac38b3166f8ac09;
 
     /// @notice The identifying key of the pool
     struct PoolKey {
@@ -32,7 +32,7 @@ library PoolAddress {
     }
 
     /// @notice Deterministically computes the pool address given the factory and PoolKey
-    /// @param factory The Uniswap V3 factory contract address
+    /// @param factory The PunchSwap V3 factory contract address
     /// @param key The PoolKey
     /// @return pool The contract address of the V3 pool
     function computeAddress(address factory, PoolKey memory key) internal pure returns (address pool) {

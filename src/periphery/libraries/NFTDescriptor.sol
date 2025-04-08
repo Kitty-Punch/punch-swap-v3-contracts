@@ -2,7 +2,7 @@
 pragma solidity >=0.7.0;
 pragma abicoder v2;
 
-import '../../core/interfaces/IUniswapV3Pool.sol';
+import '../../core/interfaces/IPunchSwapV3Pool.sol';
 import '../../core/libraries/TickMath.sol';
 import '../../core/libraries/BitMath.sol';
 import '../../core/libraries/FullMath.sol';
@@ -112,7 +112,7 @@ library NFTDescriptor {
         return
             string(
                 abi.encodePacked(
-                    'This NFT represents a liquidity position in a Uniswap V3 ',
+                    'This NFT represents a liquidity position in a PunchSwap V3 ',
                     quoteTokenSymbol,
                     '-',
                     baseTokenSymbol,
@@ -160,7 +160,7 @@ library NFTDescriptor {
         return
             string(
                 abi.encodePacked(
-                    'Uniswap - ',
+                    'PunchSwap - ',
                     feeTier,
                     ' - ',
                     escapeQuotes(params.quoteTokenSymbol),

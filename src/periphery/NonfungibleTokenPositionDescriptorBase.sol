@@ -2,7 +2,7 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import '../core/interfaces/IUniswapV3Pool.sol';
+import '../core/interfaces/IPunchSwapV3Pool.sol';
 import '@uniswap/lib/contracts/libraries/SafeERC20Namer.sol';
 
 import './libraries/ChainId.sol';
@@ -55,8 +55,8 @@ abstract contract NonfungibleTokenPositionDescriptorBase is INonfungibleTokenPos
         (, , address token0, address token1, uint24 fee, int24 tickLower, int24 tickUpper, , , , , ) =
             positionManager.positions(tokenId);
 
-        IUniswapV3Pool pool =
-            IUniswapV3Pool(
+        IPunchSwapV3Pool pool =
+            IPunchSwapV3Pool(
                 PoolAddress.computeAddress(
                     positionManager.factory(),
                     PoolAddress.PoolKey({token0: token0, token1: token1, fee: fee})

@@ -4,9 +4,9 @@ pragma abicoder v2;
 
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 import '../../periphery/base/PeripheryImmutableState.sol';
-import '../../v2/IUniswapV2Callee.sol';
-import '../../v2/IUniswapV2Pair.sol';
-import '../libraries/UniswapV2Library.sol';
+import '../../v2/IPunchSwapV2Callee.sol';
+import '../../v2/IPunchSwapV2Pair.sol';
+import '../libraries/PunchSwapV2Library.sol';
 import '../interfaces/ISwapRouter02.sol';
 import '../interfaces/ITokenValidator.sol';
 import '../base/ImmutableState.sol';
@@ -25,9 +25,9 @@ import '../base/ImmutableState.sol';
 /// @dev    in all circumstances.
 /// @dev 2/ It is possible that the token does not have any pools on V2 therefore we are not able to perform
 /// @dev    a flashloan to test the token.
-contract TokenValidator is ITokenValidator, IUniswapV2Callee, ImmutableState {
+contract TokenValidator is ITokenValidator, IPunchSwapV2Callee, ImmutableState {
     string internal constant FOT_REVERT_STRING = 'FOT';
-    // https://github.com/Uniswap/v2-core/blob/1136544ac842ff48ae0b1b939701436598d74075/contracts/UniswapV2Pair.sol#L46
+    
     string internal constant STF_REVERT_STRING_SUFFIX = 'TRANSFER_FAILED';
 
     constructor(address _factoryV2, address _positionManager) ImmutableState(_factoryV2, _positionManager) {}
@@ -66,11 +66,11 @@ contract TokenValidator is ITokenValidator, IUniswapV2Callee, ImmutableState {
             return Status.UNKN;
         }
 
-        address pairAddress = UniswapV2Library.pairFor(this.factoryV2(), token, baseToken);
+        address pairAddress = PunchSwapV2Library.pairFor(this.factoryV2(), token, baseToken);
 
         // If the token/baseToken pair exists, get token0.
         // Must do low level call as try/catch does not support case where contract does not exist.
-        (, bytes memory returnData) = address(pairAddress).call(abi.encodeWithSelector(IUniswapV2Pair.token0.selector));
+        (, bytes memory returnData) = address(pairAddress).call(abi.encodeWithSelector(IPunchSwapV2Pair.token0.selector));
 
         if (returnData.length == 0) {
             return Status.UNKN;
@@ -84,7 +84,7 @@ contract TokenValidator is ITokenValidator, IUniswapV2Callee, ImmutableState {
 
         uint256 balanceBeforeLoan = IERC20(token).balanceOf(address(this));
 
-        IUniswapV2Pair pair = IUniswapV2Pair(pairAddress);
+        IPunchSwapV2Pair pair = IPunchSwapV2Pair(pairAddress);
 
         try
             pair.swap(amount0Out, amount1Out, address(this), abi.encode(balanceBeforeLoan, amountToBorrow))
@@ -131,13 +131,13 @@ contract TokenValidator is ITokenValidator, IUniswapV2Callee, ImmutableState {
         return transferFailed;
     }
 
-    function uniswapV2Call(
+    function punchSwapV2Call(
         address,
         uint256 amount0,
         uint256,
         bytes calldata data
     ) external view override {
-        IUniswapV2Pair pair = IUniswapV2Pair(msg.sender);
+        IPunchSwapV2Pair pair = IPunchSwapV2Pair(msg.sender);
         (address token0, address token1) = (pair.token0(), pair.token1());
 
         IERC20 tokenBorrowed = IERC20(amount0 > 0 ? token0 : token1);

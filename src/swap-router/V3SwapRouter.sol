@@ -4,7 +4,7 @@ pragma abicoder v2;
 
 import '../core/libraries/SafeCast.sol';
 import '../core/libraries/TickMath.sol';
-import '../core/interfaces/IUniswapV3Pool.sol';
+import '../core/interfaces/IPunchSwapV3Pool.sol';
 import '../periphery/libraries/Path.sol';
 import '../periphery/libraries/PoolAddress.sol';
 import '../periphery/libraries/CallbackValidation.sol';
@@ -15,8 +15,8 @@ import './base/PeripheryPaymentsWithFeeExtended.sol';
 import './base/OracleSlippage.sol';
 import './libraries/Constants.sol';
 
-/// @title Uniswap V3 Swap Router
-/// @notice Router for stateless execution of swaps against Uniswap V3
+/// @title PunchSwap V3 Swap Router
+/// @notice Router for stateless execution of swaps against PunchSwap V3
 abstract contract V3SwapRouter is IV3SwapRouter, PeripheryPaymentsWithFeeExtended, OracleSlippage {
     using Path for bytes;
     using SafeCast for uint256;
@@ -33,8 +33,8 @@ abstract contract V3SwapRouter is IV3SwapRouter, PeripheryPaymentsWithFeeExtende
         address tokenA,
         address tokenB,
         uint24 fee
-    ) private view returns (IUniswapV3Pool) {
-        return IUniswapV3Pool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
+    ) private view returns (IPunchSwapV3Pool) {
+        return IPunchSwapV3Pool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
     }
 
     struct SwapCallbackData {
@@ -42,8 +42,8 @@ abstract contract V3SwapRouter is IV3SwapRouter, PeripheryPaymentsWithFeeExtende
         address payer;
     }
 
-    /// @inheritdoc IUniswapV3SwapCallback
-    function uniswapV3SwapCallback(
+    /// @inheritdoc IPunchSwapV3SwapCallback
+    function punchSwapV3SwapCallback(
         int256 amount0Delta,
         int256 amount1Delta,
         bytes calldata _data
