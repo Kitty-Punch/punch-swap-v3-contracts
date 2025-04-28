@@ -110,4 +110,4 @@ forge verify-contract --compiler-version 0.8.17 --rpc-url $RPC_URL --verifier bl
 #13
 forge verify-contract --compiler-version 0.8.17 --rpc-url $RPC_URL --verifier blockscout --verifier-url "$VERIFIER_URL" $UNSUPPORTED_PROTOCOL ./src/universal-router/deploy/UnsupportedProtocol.sol:UnsupportedProtocol
 
-forge verify-contract --compiler-version 0.8.17 --rpc-url $RPC_URL --verifier blockscout --verifier-url "$VERIFIER_URL" $UNIVERSAL_ROUTER ./src/periphery/UniversalRouter.sol:UniversalRouter --constructor-args $(cast abi-encode "constructor(address _factory, address _WETH9)" $V3_FACTORY $WETH9)
+forge verify-contract --compiler-version 0.8.17 --rpc-url $RPC_URL --verifier blockscout --verifier-url "$VERIFIER_URL" $UNIVERSAL_ROUTER ./src/universal-router/UniversalRouter.sol:UniversalRouter --constructor-args $(cast abi-encode "constructor(address _factory, address _WETH9)" $V3_FACTORY $WETH9)
