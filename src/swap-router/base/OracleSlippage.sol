@@ -8,14 +8,14 @@ import '../../periphery/base/PeripheryImmutableState.sol';
 import '../../periphery/base/BlockTimestamp.sol';
 import '../../periphery/libraries/Path.sol';
 import '../../periphery/libraries/PoolAddress.sol';
-import '../../core/interfaces/IUniswapV3Pool.sol';
+import '../../core/interfaces/IPunchSwapV3Pool.sol';
 import '../../periphery/libraries/OracleLibrary.sol';
 
 abstract contract OracleSlippage is IOracleSlippage, PeripheryImmutableState, BlockTimestamp {
     using Path for bytes;
 
     /// @dev Returns the tick as of the beginning of the current block, and as of right now, for the given pool.
-    function getBlockStartingAndCurrentTick(IUniswapV3Pool pool)
+    function getBlockStartingAndCurrentTick(IPunchSwapV3Pool pool)
         internal
         view
         returns (int24 blockStartingTick, int24 currentTick)
@@ -50,8 +50,8 @@ abstract contract OracleSlippage is IOracleSlippage, PeripheryImmutableState, Bl
         address tokenA,
         address tokenB,
         uint24 fee
-    ) internal view virtual returns (IUniswapV3Pool pool) {
-        pool = IUniswapV3Pool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
+    ) internal view virtual returns (IPunchSwapV3Pool pool) {
+        pool = IPunchSwapV3Pool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
     }
 
     /// @dev Returns the synthetic time-weighted average tick as of secondsAgo, as well as the current tick,
@@ -69,7 +69,7 @@ abstract contract OracleSlippage is IOracleSlippage, PeripheryImmutableState, Bl
         for (uint256 i = 0; i < numPools; i++) {
             // this assumes the path is sorted in swap order
             (address tokenIn, address tokenOut, uint24 fee) = path.decodeFirstPool();
-            IUniswapV3Pool pool = getPoolAddress(tokenIn, tokenOut, fee);
+            IPunchSwapV3Pool pool = getPoolAddress(tokenIn, tokenOut, fee);
 
             // get the average and current ticks for the current pool
             int256 averageTick;
@@ -79,7 +79,7 @@ abstract contract OracleSlippage is IOracleSlippage, PeripheryImmutableState, Bl
                 (averageTick, currentTick) = getBlockStartingAndCurrentTick(pool);
             } else {
                 (averageTick, ) = OracleLibrary.consult(address(pool), secondsAgo);
-                (, currentTick, , , , , ) = IUniswapV3Pool(pool).slot0();
+                (, currentTick, , , , , ) = IPunchSwapV3Pool(pool).slot0();
             }
 
             if (i == numPools - 1) {

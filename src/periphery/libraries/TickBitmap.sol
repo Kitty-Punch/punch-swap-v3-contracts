@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 pragma solidity =0.7.6;
 
-import '../../core/interfaces/IUniswapV3Pool.sol';
+import '../../core/interfaces/IPunchSwapV3Pool.sol';
 import '../../core/libraries/BitMath.sol';
 
 /// @title Packed tick initialized state library
@@ -31,7 +31,7 @@ library TickBitmap {
         int24 tickSpacing,
         bool lte
     ) internal view returns (int24 next, bool initialized) {
-        IUniswapV3Pool pool = IUniswapV3Pool(poolAddress);
+        IPunchSwapV3Pool pool = IPunchSwapV3Pool(poolAddress);
         int24 compressed = tick / tickSpacing;
         if (tick < 0 && tick % tickSpacing != 0) compressed--; // round towards negative infinity
 

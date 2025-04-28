@@ -3,16 +3,16 @@ pragma solidity ^0.8.17;
 
 import {V3Path} from './V3Path.sol';
 import {SafeCast} from '../../../../core/libraries/SafeCast.sol';
-import {IUniswapV3Pool} from '../../../../core/interfaces/IUniswapV3Pool.sol';
-import {IUniswapV3SwapCallback} from '../../../../core/interfaces/callback/IUniswapV3SwapCallback.sol';
+import {IPunchSwapV3Pool} from '../../../../core/interfaces/IPunchSwapV3Pool.sol';
+import {IPunchSwapV3SwapCallback} from '../../../../core/interfaces/callback/IPunchSwapV3SwapCallback.sol';
 import {Constants} from '../../../libraries/Constants.sol';
 import {RouterImmutables} from '../../../base/RouterImmutables.sol';
 import {Permit2Payments} from '../../Permit2Payments.sol';
 import {Constants} from '../../../libraries/Constants.sol';
 import {ERC20} from 'solmate/src/tokens/ERC20.sol';
 
-/// @title Router for Uniswap v3 Trades
-abstract contract V3SwapRouter is RouterImmutables, Permit2Payments, IUniswapV3SwapCallback {
+/// @title Router for PunchSwap v3 Trades
+abstract contract V3SwapRouter is RouterImmutables, Permit2Payments, IPunchSwapV3SwapCallback {
     using V3Path for bytes;
     using SafeCast for uint256;
 
@@ -35,7 +35,7 @@ abstract contract V3SwapRouter is RouterImmutables, Permit2Payments, IUniswapV3S
     /// @dev The maximum value that can be returned from #getSqrtRatioAtTick. Equivalent to getSqrtRatioAtTick(MAX_TICK)
     uint160 internal constant MAX_SQRT_RATIO = 1461446703485210103287273052203988822378723970342;
 
-    function uniswapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
+    function punchSwapV3SwapCallback(int256 amount0Delta, int256 amount1Delta, bytes calldata data) external {
         if (amount0Delta <= 0 && amount1Delta <= 0) revert V3InvalidSwap(); // swaps entirely within 0-liquidity regions are not supported
         (bytes memory path, address payer) = abi.decode(data, (bytes, address));
 
@@ -64,7 +64,7 @@ abstract contract V3SwapRouter is RouterImmutables, Permit2Payments, IUniswapV3S
         }
     }
 
-    /// @notice Performs a Uniswap v3 exact input swap
+    /// @notice Performs a PunchSwap v3 exact input swap
     /// @param recipient The recipient of the output tokens
     /// @param amountIn The amount of input tokens for the trade
     /// @param amountOutMinimum The minimum desired amount of output tokens
@@ -111,7 +111,7 @@ abstract contract V3SwapRouter is RouterImmutables, Permit2Payments, IUniswapV3S
         if (amountOut < amountOutMinimum) revert V3TooLittleReceived();
     }
 
-    /// @notice Performs a Uniswap v3 exact output swap
+    /// @notice Performs a PunchSwap v3 exact output swap
     /// @param recipient The recipient of the output tokens
     /// @param amountOut The amount of output tokens to receive for the trade
     /// @param amountInMaximum The maximum desired amount of input tokens
@@ -145,7 +145,7 @@ abstract contract V3SwapRouter is RouterImmutables, Permit2Payments, IUniswapV3S
 
         zeroForOne = isExactIn ? tokenIn < tokenOut : tokenOut < tokenIn;
 
-        (amount0Delta, amount1Delta) = IUniswapV3Pool(computePoolAddress(tokenIn, tokenOut, fee)).swap(
+        (amount0Delta, amount1Delta) = IPunchSwapV3Pool(computePoolAddress(tokenIn, tokenOut, fee)).swap(
             recipient,
             zeroForOne,
             amount,
@@ -162,9 +162,9 @@ abstract contract V3SwapRouter is RouterImmutables, Permit2Payments, IUniswapV3S
                     keccak256(
                         abi.encodePacked(
                             hex'ff',
-                            UNISWAP_V3_FACTORY,
+                            PUNCH_SWAP_V3_FACTORY,
                             keccak256(abi.encode(tokenA, tokenB, fee)),
-                            UNISWAP_V3_POOL_INIT_CODE_HASH
+                            PUNCH_SWAP_V3_POOL_INIT_CODE_HASH
                         )
                     )
                 )

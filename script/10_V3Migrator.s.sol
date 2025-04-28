@@ -27,7 +27,7 @@ contract V3MigratorScript is Constants {
 
         vm.startBroadcast(deployerPrivateKey);
 
-        // constructor(address _factory, address _WETH9, address _tokenDescriptor_ )
+        // constructor(address _factory, address _WETH9, address _positionManager )
         migrator = new V3Migrator{salt: salt}(V3FACTORY, WETH9, POSITION_MANAGER );
 
         vm.stopBroadcast();

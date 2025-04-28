@@ -1,24 +1,26 @@
 echo $(date) > local_deploy.txt
 source .env
 
-CHECK_UNISWAP_V3_POOL_INIT_CODE_HASH=true
+NETWORK=mainnet
+CHECK_UNISWAP_V3_POOL_INIT_CODE_HASH=false
 DEPLOY_CORE=false
 DEPLOY_PERIPHERY_1=false
 DEPLOY_PERIPHERY_2=false
 DEPLOY_PERIPHERY_3=false
 DEPLOY_SWAP_ROUTER=false
-DEPLOY_UNIVERSAL_ROUTER=true
+DEPLOY_UNIVERSAL_ROUTER=false
 DEPLOY_STAKER=false
 DEPLOY_FEE_COLLECTOR=false
-UNIVERSAL_ROUTER_JSON_FILE=flow-testnet.json
+UNIVERSAL_ROUTER_JSON_FILE=flow-$NETWORK.json
 
-DO_BROADCAST=true
+DO_BROADCAST=false
 BROADCAST_FLAG=""
 
 if [ "$DO_BROADCAST" = true ]; then
     BROADCAST_FLAG="--broadcast"
 fi
 
+echo 'NETWORK: '$NETWORK
 echo 'RPC_URL: '$RPC_URL
 echo 'OWNER: '$OWNER
 echo 'SALT: '$SALT
@@ -74,7 +76,7 @@ else
 fi
 
 if [ "$CHECK_UNISWAP_V3_POOL_INIT_CODE_HASH" = true ]; then
-    forge script script/00_UniswapV3PoolInitBytecodeHash.s.sol --rpc-url $RPC_URL --slow --legacy | tee -a ../local_deploy.txt
+    forge script script/00_PunchSwapV3PoolInitBytecodeHash.s.sol --rpc-url $RPC_URL --slow --legacy | tee -a ../local_deploy.txt
 fi
 
 echo '***************'
@@ -82,8 +84,8 @@ echo '* CORE Module *'
 echo '***************'
 
 if [ "$DEPLOY_CORE" = true ]; then
-    forge script script/01_UniswapV3Factory.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
-    # forge script script/02_UniswapV3PoolDeployer.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
+    forge script script/01_PunchSwapV3Factory.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
+    # forge script script/02_PunchSwapV3PoolDeployer.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
 else
     echo 'SKIPPING CORE MODULE DEPLOYMENT'
 fi
@@ -93,12 +95,12 @@ echo '* PERIPHERY Module *'
 echo '********************'
 
 if [ "$DEPLOY_PERIPHERY_1" = true ]; then
-    forge script script/03_UniswapInterfaceMulticall.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
+    forge script script/03_PunchSwapInterfaceMulticall.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
     forge script script/04_TickLens.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
     forge script script/05_Quoter.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
         # V3 Factory
         # WETH9
-    forge script script/05a_UniswapV3StaticQuoter.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
+    forge script script/05a_PunchSwapV3StaticQuoter.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
         # V3 Factory
     forge script script/06_SwapRouter.s.sol  --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
         # V3 Factory
@@ -106,10 +108,13 @@ if [ "$DEPLOY_PERIPHERY_1" = true ]; then
     forge script script/07_QuoterV2.s.sol  --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
         # V3 Factory
         # WETH9
-    forge script script/08_NonfungibleTokenPositionDescriptor.s.sol  --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
-        # ETH_NATIVE_CURRENCY_LABEL_BYTES
-    forge script script/08a_TestnetNonfungibleTokenPositionDescriptor.s.sol  --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
-        # ETH_NATIVE_CURRENCY_LABEL_BYTES
+    if [ "$NETWORK" = "mainnet" ]; then
+        forge script script/08_NonfungibleTokenPositionDescriptor.s.sol  --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
+            # ETH_NATIVE_CURRENCY_LABEL_BYTES
+    else
+        forge script script/08a_TestnetNonfungibleTokenPositionDescriptor.s.sol  --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG --sender $OWNER | tee -a ../local_deploy.txt
+            # ETH_NATIVE_CURRENCY_LABEL_BYTES  
+    fi
 else
     echo 'SKIPPING PERIPHERY 1 MODULE DEPLOYMENT'
 fi
@@ -157,7 +162,7 @@ echo '* V3 STAKER Module *'
 echo '********************'
 
 if [ "$DEPLOY_STAKER" = true ]; then
-    forge script script/13_UniswapV3Staker.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
+    forge script script/13_PunchSwapV3Staker.s.sol --rpc-url $RPC_URL --slow --legacy $BROADCAST_FLAG | tee -a ../local_deploy.txt
 else
     echo 'SKIPPING V3 STAKER MODULE DEPLOYMENT'
 fi

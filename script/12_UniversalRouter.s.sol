@@ -18,6 +18,7 @@ contract UniversalRouterScript is Constants {
     function run(RouterParameters memory params) public returns (UniversalRouter router) {
         console2.log("Salt: ");
         console2.logBytes32(salt);
+        require(true, "Validate PunchSwapV3Pool init code hash and UPDATE <network>.json file.");
 
         vm.startBroadcast(deployerPrivateKey);
         address unsupported = address(new UnsupportedProtocol{salt: salt}());
