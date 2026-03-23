@@ -4,6 +4,11 @@ out = "out"
 libs = ["lib"]
 optimizer = true
 optimizer_runs = 1
+fallback_oz = true
+is_system = false
+
+#[profile.default.zksync]
+#enable_eravm_extensions = true # Note: System contract calls (NonceHolder and ContractDeployer) can only be called with this set to true
 
 fs_permissions = [{ access = "read", path = "./script/deployParameters/"}]
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
@@ -18,5 +23,5 @@ remappings = [
 ]
 
 [rpc_endpoints]
-mainnet = "https://mainnet.evm.nodes.onflow.org"
-testnet = "https://testnet.evm.nodes.onflow.org"
+flow_mainnet = "https://mainnet.evm.nodes.onflow.org"
+flow_testnet = "https://testnet.evm.nodes.onflow.org"

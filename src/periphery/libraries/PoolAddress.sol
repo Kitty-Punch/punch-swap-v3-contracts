@@ -4,7 +4,7 @@ pragma solidity =0.7.6;
 /// @title Provides functions for deriving a pool address from the factory, tokens, and the fee
 library PoolAddress {
     // Punch Swap v3 init code hash
-    bytes32 internal constant POOL_INIT_CODE_HASH = 0x26660e3e1d4c57d4b15194ab223b67c9fdb3c3d98d4b50513ac38b3166f8ac09;
+    bytes32 internal constant POOL_INIT_CODE_HASH = 0x01001099bcaa98e0dc95de15514cebfb0d7778a993f8d2107ed1d5d8e7860ac2;
 
     /// @notice The identifying key of the pool
     struct PoolKey {
@@ -41,10 +41,11 @@ library PoolAddress {
             uint256(
                 keccak256(
                     abi.encodePacked(
-                        hex'ff',
+                        bytes32(0x2020dba91b30cc0006188af794c2fb30dd8520db7e2c088b7fc7c103c00ca494), // keccak256("zksyncCreate2")
                         factory,
                         keccak256(abi.encode(key.token0, key.token1, key.fee)),
-                        POOL_INIT_CODE_HASH
+                        POOL_INIT_CODE_HASH,
+                        bytes32(0xc5d2460186f7233c927e7db2dcc703c0e500b653ca82273b7bfad8045d85a470) // constructor input hash: keccak256("")
                     )
                 )
             )
