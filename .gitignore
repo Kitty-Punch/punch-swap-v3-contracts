@@ -17,3 +17,5 @@ dependencies/
 typescript/
 node_modules/
 *.log
+*.txt
+zkout/
