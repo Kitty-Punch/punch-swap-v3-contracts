@@ -11,7 +11,7 @@ contract PunchSwapV3FactoryScript is Constants {
         uint256 deployerPrivateKey = vm.envUint(PARAM_PK_ACCOUNT);
         bytes32 salt = vm.envBytes32(PARAM_SALT);
         address ownerAddress = vm.envAddress(PARAM_OWNER);
-        address newOwner = address(0x0);
+        address newOwner = vm.envAddress(PARAM_FINAL_OWNER);
 
         console.log("Owner:     ", ownerAddress);
         console.log("Starting script: broadcasting");
