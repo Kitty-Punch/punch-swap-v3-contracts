@@ -5,6 +5,7 @@ import "forge-std/Script.sol";
 
 abstract contract Constants is Script {
     string public constant PARAM_OWNER = "OWNER";
+    string public constant PARAM_FINAL_OWNER = "FINAL_OWNER";
     string public constant PARAM_PK_ACCOUNT = "PK_ACCOUNT";
     string public constant PARAM_SALT = "SALT";
     string public constant PARAM_WETH9 = "WETH9";
